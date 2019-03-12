@@ -1,0 +1,24 @@
+{
+   "type": "mysql",
+   "host": "localhost",
+   "port": 3306,
+   "username": "",
+   "password": "",
+   "database": "",
+   "synchronize": true,
+   "logging": true,
+   "entities": [
+      "lib/entity/**/*.js"
+   ],
+   "migrations": [
+      "lib/migration/**/*.js"
+   ],
+   "subscribers": [
+      "lib/subscriber/**/*.js"
+   ],
+   "cli": {
+      "entitiesDir": "lib/entity",
+      "migrationsDir": "lib/migration",
+      "subscribersDir": "lib/subscriber"
+   }
+}
