@@ -5,8 +5,9 @@ const serverStarter = (port:number, host:string) => new Promise<Express>((resolv
     //TODO: move this in components (CORS available)
     app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Set-Cookie');
         res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, DELETE');
+        res.header('Access-Control-Allow-Credentials', 'true');
         if('OPTIONS' === req.method) {
             res.sendStatus(200);
         } else {
