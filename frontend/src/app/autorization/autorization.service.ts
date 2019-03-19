@@ -1,15 +1,26 @@
 import {Injectable} from '@angular/core';
 import {User} from "../entities/User";
-import {BehaviorSubject} from "rxjs";
+import {Observable, of} from "rxjs";
 import {AutorizationState} from "./autorization.state";
 import {AutorizationForm} from "./autorization.form";
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {catchError, tap} from "rxjs/operators";
+import {MessageService} from "../message.service";
+import {HttpResultEnum} from "../core/http.result";
+import {AutorizationResult} from "./autorization.result";
+import {AppHttp} from "../app.http";
+
+const httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 
 @Injectable({
     providedIn: 'root'
 })
 export class AutorizationService {
-    state: AutorizationState;
-    constructor() {
+    private apiUrl = AppHttp.API_URL + 'autorization/';
+    private readonly state: AutorizationState;
+    constructor(private http: HttpClient, private messageService: MessageService) {
         this.state = new AutorizationState();
         this.loadStateFromServer();
     }
@@ -19,23 +30,25 @@ export class AutorizationService {
     }
 
     autorizate(form:AutorizationForm) {
-        // TODO: implement this
         this.state.isLoading$.next(true);
-        setTimeout(()=>{
+        this.http.post<AutorizationResult>(this.apiUrl+'autorizate', form, httpOptions).pipe(
+            tap((result: AutorizationResult) => this.log(`autorizate user ${result.result}`)),
+            catchError(this.handleError<AutorizationResult>('autorizate'))
+        ).subscribe((result:AutorizationResult)=>{
             let errors = [];
-            if (form.email==='a' && form.password==='1') {
-                let user = new User();
-                user.id = 1;
-                user.name = "Vasay";
-                user.login = "vasay";
-                user.token = "token";
-                this.state.user$.next(user);
-            } else {
-                errors.push('Неверный логин или пароль');
+            this.state.user$.next(result.user);
+            if (result.result == HttpResultEnum.success) {
+
+            } else if (result.result == HttpResultEnum.error) {
+                errors = result.errors;
             }
             this.state.errors$.next(errors);
+        }, (error)=>{
+            this.state.user$.next(null);
+            this.state.errors$.next(['Что-то пошло не так...']);
+        }, ()=>{
             this.state.isLoading$.next(false);
-        },500);
+        });
     }
 
     logout() {
@@ -51,11 +64,36 @@ export class AutorizationService {
 
     private loadStateFromServer() {
         this.state.isLoading$.next(true);
-        // TODO: implement this
-        setTimeout(()=>{
+        this.http.post<AutorizationResult>(this.apiUrl+'checkAutorization', null, httpOptions).pipe(
+            tap((result: AutorizationResult) => this.log(`checkAutorization user ${result.result}`)),
+            catchError(this.handleError<AutorizationResult>('checkAutorization'))
+        ).subscribe((result:AutorizationResult)=>{
+            this.state.user$.next(result.user);
+        }, (error)=>{
+            this.state.user$.next(null);
+            this.state.errors$.next(['Что-то пошло не так...']);
+        }, ()=>{
             let errors = [];
             this.state.isLoading$.next(false);
             this.state.errors$.next(errors);
-        },1500);
+        });
+    }
+
+    private handleError<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
+
+            // TODO: better job of transforming error for user consumption
+            this.log(`${operation} failed: ${error.message}`);
+
+            // Let the app keep running by returning an empty result.
+            return of(result as T);
+        };
+    }
+
+    private log(message: string) {
+        this.messageService.add(`AuthService: ${message}`);
     }
 }
