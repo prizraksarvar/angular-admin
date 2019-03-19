@@ -1,0 +1,8 @@
+<ul class="nav flex-column">
+    <li *ngFor="let item of menu" class="nav-item">
+        <a class="nav-link" [class.active]="item.isActive" routerLink="{{item.url}}">
+            {{item.icon}}
+            {{item.name}} <span *ngIf="item.isActive" class="sr-only">(current)</span>
+        </a>
+    </li>
+</ul>
