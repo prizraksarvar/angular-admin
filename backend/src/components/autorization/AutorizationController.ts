@@ -25,16 +25,21 @@ export class AutorizationController extends Controller{
         this.registerRouteMiddleware(RouteMiddlewareTypes.post, "/autorization/checkAutorization", this.checkAutorization);
     }
 
-    private autorizationCheckMiddleware(request:IRequest, response:IResponse, next:INextFunction) {
-        if (request.cookies && request.cookies.sessionID) {
-            var sessionID = request.cookies.sessionID;
+    private async autorizationCheckMiddleware(request:IRequest, response:IResponse, next:INextFunction) {
+        if (request.body && request.body.token) {
+            var sessionID = request.body.token;
             console.log('cookie sessionID found '+sessionID);
             const sessionRepository = getRepository(UserSession);
             let date = new Date();
             date.setHours(date.getHours() + 3);
-            sessionRepository.find({ where: { token: sessionID, updated: MoreThanOrEqual(date) }, relations: ["user"] }).then((sessions:UserSession[])=>{
+            //, updated: MoreThanOrEqual(date)
+            sessionRepository.find({ where: { token: sessionID }, relations: ["user"] }).then((sessions:UserSession[])=>{
+                if (sessions.length==0) {
+                    throw new InternalErrorException('Сессия устарела');
+                }
+
                 if (sessions.length!=1) {
-                    throw new InternalErrorException('Дубликат сессии или сессия устарела');
+                    throw new InternalErrorException('Дубликат сессии');
                 }
 
                 let session = sessions[0];
@@ -42,13 +47,15 @@ export class AutorizationController extends Controller{
                 if (!session.user) {
                     throw new InternalErrorException('Сессия без пользователя, авторизация не требуется');
                 }
-                request.state = new AutorizedState(session.user, request.state);
+                request.state = new AutorizedState(session, request.state);
+                console.log(request.state);
             }).catch((err)=>{
                 request.state = new NotAutorizedState(request.state);
                 console.log(err);
-            });
+            }).finally(next);
+        } else {
+            next();
         }
-        next();
     }
 
     private autorizate(request:IRequest, response:IResponse, next:INextFunction) {
@@ -84,12 +91,12 @@ export class AutorizationController extends Controller{
             session.token = salt;
             session.user = user;
             sessionRepository.save(session).then(()=>{
-                response.cookie('sessionID',salt); //, { maxAge: 1800000, httpOnly: true, path: '/', domain: 'localhost' }
+                //response.cookie('sessionID',salt); //, { maxAge: 1800000, httpOnly: true, path: '/', domain: 'localhost' }
                 result.user = {
                     id: user.id,
                     name: user.getFullName(),
                     login: user.login,
-                    token: 'token'
+                    token: salt
                 };
                 result.result = ResponseResultEnum.success;
                 response.send(result);
@@ -111,13 +118,14 @@ export class AutorizationController extends Controller{
         result.user = null;
         result.errors = [];
         result.result = ResponseResultEnum.error;
+        console.log(request.state);
         if (request.state instanceof AutorizedState) {
             const state:AutorizedState = request.state;
             result.user = {
-                id: state.user.id,
-                name: state.user.getFullName(),
-                login: state.user.login,
-                token: 'token'
+                id: state.session.user.id,
+                name: state.session.user.getFullName(),
+                login: state.session.user.login,
+                token: state.session.token
             };
             result.result = ResponseResultEnum.success;
             response.send(result);
