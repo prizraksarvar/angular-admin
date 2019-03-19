@@ -1,46 +1,110 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {User} from "../entities/User";
-import {AutorizationService} from "./autorization.service";
-import {forEach} from "@angular/router/src/utils/collection";
-import {Subscription} from "rxjs";
+import {Observable, of, Subscription} from "rxjs";
+import {AutorizationState} from "./autorization.state";
 import {AutorizationForm} from "./autorization.form";
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {catchError, tap} from "rxjs/operators";
+import {MessageService} from "../message.service";
+import {HttpResultEnum} from "../core/http.result";
+import {AutorizationResult} from "./autorization.result";
+import {AppHttp} from "../app.http";
+import { CookieService } from 'ngx-cookie-service';
 
-@Component({
-    selector: 'app-autorization',
-    templateUrl: './autorization.component.html',
-    styleUrls: ['./autorization.component.css']
+const httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
+
+@Injectable({
+    providedIn: 'root'
 })
-export class AutorizationComponent implements OnInit,OnDestroy {
-    user: User;
-    isLoading: boolean;
-    errors: string[];
-    subscriptions:Subscription[];
-    form: AutorizationForm;
-    autorizationService:AutorizationService;
-
-    constructor(autorizationService:AutorizationService) {
-        this.autorizationService = autorizationService;
-        this.form = new AutorizationForm();
-        this.subscriptions = [];
-        let state = autorizationService.getState();
-        this.isLoading = false;
-        this.subscriptions.push(state.isLoading$.subscribe((value:boolean)=>{this.isLoading = value}));
-        this.user = null;
-        this.subscriptions.push(state.user$.subscribe((value:User)=>{this.user = value}));
-        this.errors = [];
-        this.subscriptions.push(state.errors$.subscribe((value:string[])=>{this.errors = value}));
+export class AutorizationService {
+    private apiUrl = AppHttp.API_URL + 'autorization/';
+    private readonly state: AutorizationState;
+    private sessionId: string;
+    constructor(
+        private http: HttpClient,
+        private messageService: MessageService,
+        private cookieService: CookieService
+    ) {
+        this.state = new AutorizationState();
+        this.sessionId = cookieService.get("sessionId");
+        this.loadStateFromServer();
     }
 
-    onSubmitForm():void {
-        this.autorizationService.autorizate(this.form);
+    getState() {
+        return this.state;
     }
 
-    ngOnInit() {
-    }
+    autorizate(form:AutorizationForm) {
+        this.state.isLoading$.next(true);
+        this.http.post<AutorizationResult>(this.apiUrl+'autorizate', form, httpOptions).pipe(
+            tap((result: AutorizationResult) => this.log(`autorizate user ${result.result}`)),
+            catchError(this.handleError<AutorizationResult>('autorizate'))
+        ).subscribe((result:AutorizationResult)=>{
+            let errors = [];
+            if (result.user) {
+                this.sessionId = result.user.token;
+                this.cookieService.set("sessionId",this.sessionId);
+            }
+            this.state.user$.next(result.user);
+            if (result.result == HttpResultEnum.success) {
 
-    ngOnDestroy() {
-        this.subscriptions.forEach((subsciption:Subscription,index: number, array: Subscription[])=>{
-            subsciption.unsubscribe();
+            } else if (result.result == HttpResultEnum.error) {
+                errors = result.errors;
+            }
+            this.state.errors$.next(errors);
+        }, (error)=>{
+            this.state.user$.next(null);
+            this.state.errors$.next(['Что-то пошло не так...']);
+        }, ()=>{
+            this.state.isLoading$.next(false);
         });
+    }
+
+    logout() {
+        // TODO: implement this
+        this.state.isLoading$.next(true);
+        setTimeout(()=>{
+            let errors = [];
+            this.state.user$.next(null);
+            this.state.isLoading$.next(false);
+            this.state.errors$.next(errors);
+        },500);
+    }
+
+    private loadStateFromServer() {
+        this.state.isLoading$.next(true);
+        this.http.post<AutorizationResult>(this.apiUrl+'checkAutorization', {token: this.sessionId}, httpOptions).pipe(
+            tap((result: AutorizationResult) => this.log(`checkAutorization user ${result.result}`)),
+            catchError(this.handleError<AutorizationResult>('checkAutorization'))
+        ).subscribe((result:AutorizationResult)=>{
+            this.state.user$.next(result.user);
+        }, (error)=>{
+            this.state.user$.next(null);
+            this.state.errors$.next(['Что-то пошло не так...']);
+        }, ()=>{
+            let errors = [];
+            this.state.isLoading$.next(false);
+            this.state.errors$.next(errors);
+        });
+    }
+
+    private handleError<T> (operation = 'operation', result?: T) {
+        return (error: any): Observable<T> => {
+
+            // TODO: send the error to remote logging infrastructure
+            console.error(error); // log to console instead
+
+            // TODO: better job of transforming error for user consumption
+            this.log(`${operation} failed: ${error.message}`);
+
+            // Let the app keep running by returning an empty result.
+            return of(result as T);
+        };
+    }
+
+    private log(message: string) {
+        this.messageService.add(`AuthService: ${message}`);
     }
 }
