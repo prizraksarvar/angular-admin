@@ -1,5 +1,5 @@
 import {Connection} from "typeorm";
-import {Express, IRouterHandler, NextFunction, Request, Response} from "express";
+import {Express, IRouterHandler, json, NextFunction, Request, Response} from "express";
 import {rejects} from "assert";
 import database from "./database";
 import serverStarter from "./server";
