@@ -3,7 +3,7 @@ import {BehaviorSubject} from "rxjs";
 
 
 export class AutorizationForm {
-    email: string = '';
+    login: string = '';
     password: string = '';
     isRememberMe: boolean = false;
 }
