@@ -1,5 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
 import {BaseEntity} from "../core/orm/BaseEntity";
+import {UserSession} from "./UserSession";
 
 @Entity()
 export class User extends BaseEntity {
@@ -24,4 +25,11 @@ export class User extends BaseEntity {
 
     @Column()
     password: string;
+
+    @OneToMany(type => UserSession, session => session.user)
+    sessions: UserSession[];
+
+    public getFullName() {
+        return this.firstName+' '+this.lastName;
+    }
 }
