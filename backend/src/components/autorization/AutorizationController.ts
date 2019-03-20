@@ -23,6 +23,7 @@ export class AutorizationController extends Controller{
         this.registerRouteMiddleware(RouteMiddlewareTypes.get, "/autorization", this.route);
         this.registerRouteMiddleware(RouteMiddlewareTypes.post, "/autorization/autorizate", this.autorizate);
         this.registerRouteMiddleware(RouteMiddlewareTypes.post, "/autorization/checkAutorization", this.checkAutorization);
+        this.registerRouteMiddleware(RouteMiddlewareTypes.post, "/autorization/logout", this.logout);
     }
 
     private async autorizationCheckMiddleware(request:IRequest, response:IResponse, next:INextFunction) {
@@ -129,6 +130,29 @@ export class AutorizationController extends Controller{
             };
             result.result = ResponseResultEnum.success;
             response.send(result);
+            return;
+        }
+        result.errors.push('Пользователь не авторизован');
+        response.send(result);
+    }
+
+    private logout(request:IRequest, response:IResponse, next:INextFunction) {
+        let result = new AutorizateResponse();
+        result.user = null;
+        result.errors = [];
+        result.result = ResponseResultEnum.error;
+        console.log(request.state);
+        if (request.state instanceof AutorizedState) {
+            const state:AutorizedState = request.state;
+            const sessionRepository = getRepository(UserSession);
+            sessionRepository.remove([state.session]).then(()=>{
+                result.result = ResponseResultEnum.success;
+                response.send(result);
+            }).catch((error)=>{
+                console.log(error);
+                result.errors.push('Ошибка обработки запроса');
+                response.send(result);
+            });
             return;
         }
         result.errors.push('Пользователь не авторизован');
