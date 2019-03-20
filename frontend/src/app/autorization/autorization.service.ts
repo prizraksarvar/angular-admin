@@ -1,14 +1,15 @@
 import {Injectable} from '@angular/core';
 import {User} from "../entities/User";
-import {Observable, of} from "rxjs";
+import {Observable, of, Subscription} from "rxjs";
 import {AutorizationState} from "./autorization.state";
 import {AutorizationForm} from "./autorization.form";
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, tap} from "rxjs/operators";
-import {MessageService} from "../message.service";
+import {MessagelogService} from "../messagelog/messagelog.service";
 import {HttpResultEnum} from "../core/http.result";
 import {AutorizationResult} from "./autorization.result";
 import {AppHttp} from "../app.http";
+import { CookieService } from 'ngx-cookie-service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -20,8 +21,14 @@ const httpOptions = {
 export class AutorizationService {
     private apiUrl = AppHttp.API_URL + 'autorization/';
     private readonly state: AutorizationState;
-    constructor(private http: HttpClient, private messageService: MessageService) {
+    private sessionId: string;
+    constructor(
+        private http: HttpClient,
+        private messageService: MessagelogService,
+        private cookieService: CookieService
+    ) {
         this.state = new AutorizationState();
+        this.sessionId = cookieService.get("sessionId");
         this.loadStateFromServer();
     }
 
@@ -36,6 +43,10 @@ export class AutorizationService {
             catchError(this.handleError<AutorizationResult>('autorizate'))
         ).subscribe((result:AutorizationResult)=>{
             let errors = [];
+            if (result.user) {
+                this.sessionId = result.user.token;
+                this.cookieService.set("sessionId",this.sessionId);
+            }
             this.state.user$.next(result.user);
             if (result.result == HttpResultEnum.success) {
 
@@ -46,6 +57,7 @@ export class AutorizationService {
         }, (error)=>{
             this.state.user$.next(null);
             this.state.errors$.next(['Что-то пошло не так...']);
+            this.log(`checkAutorization user ${error}`)
         }, ()=>{
             this.state.isLoading$.next(false);
         });
@@ -54,17 +66,33 @@ export class AutorizationService {
     logout() {
         // TODO: implement this
         this.state.isLoading$.next(true);
+        let errors = [];
+        this.state.errors$.next(errors);
         setTimeout(()=>{
             let errors = [];
             this.state.user$.next(null);
             this.state.isLoading$.next(false);
             this.state.errors$.next(errors);
         },500);
+        this.state.isLoading$.next(true);
+        this.http.post<AutorizationResult>(this.apiUrl+'logout', {token: this.sessionId}, httpOptions).pipe(
+            tap((result: AutorizationResult) => this.log(`logout user ${result.result}`)),
+            catchError(this.handleError<AutorizationResult>('logout'))
+        ).subscribe((result:AutorizationResult)=>{
+
+        }, (error)=>{
+            this.state.user$.next(null);
+            this.state.errors$.next(['Что-то пошло не так...']);
+            this.log(`logout user ${error}`)
+        }, ()=>{
+            this.state.user$.next(null);
+            this.state.isLoading$.next(false);
+        });
     }
 
     private loadStateFromServer() {
         this.state.isLoading$.next(true);
-        this.http.post<AutorizationResult>(this.apiUrl+'checkAutorization', null, httpOptions).pipe(
+        this.http.post<AutorizationResult>(this.apiUrl+'checkAutorization', {token: this.sessionId}, httpOptions).pipe(
             tap((result: AutorizationResult) => this.log(`checkAutorization user ${result.result}`)),
             catchError(this.handleError<AutorizationResult>('checkAutorization'))
         ).subscribe((result:AutorizationResult)=>{
@@ -72,6 +100,7 @@ export class AutorizationService {
         }, (error)=>{
             this.state.user$.next(null);
             this.state.errors$.next(['Что-то пошло не так...']);
+            this.log(`checkAutorization user ${error}`)
         }, ()=>{
             let errors = [];
             this.state.isLoading$.next(false);
