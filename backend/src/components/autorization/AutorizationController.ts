@@ -27,9 +27,21 @@ export class AutorizationController extends Controller{
     }
 
     private async autorizationCheckMiddleware(request:IRequest, response:IResponse, next:INextFunction) {
-        if (request.body && request.body.token) {
-            var sessionID = request.body.token;
-            console.log('cookie sessionID found '+sessionID);
+        let cookieString = request.header("X-Cookie");
+        request.xcookies = {};
+        if (typeof cookieString == 'string') {
+            const cookies = cookieString.split(';');
+            cookies.forEach((item)=>{
+                let s = item.split('=',2);
+                if (s.length==2) {
+                    request.xcookies[s[0]] = s[1];
+                }
+            });
+        }
+        console.log(request.xcookies);
+
+        if (request.xcookies && request.xcookies.sessionId) {
+            var sessionID = request.xcookies.sessionId;
             const sessionRepository = getRepository(UserSession);
             let date = new Date();
             date.setHours(date.getHours() + 3);
@@ -49,7 +61,6 @@ export class AutorizationController extends Controller{
                     throw new InternalErrorException('Сессия без пользователя, авторизация не требуется');
                 }
                 request.state = new AutorizedState(session, request.state);
-                console.log(request.state);
             }).catch((err)=>{
                 request.state = new NotAutorizedState(request.state);
                 console.log(err);
@@ -65,17 +76,13 @@ export class AutorizationController extends Controller{
         result.user = null;
         result.errors = [];
         result.result = ResponseResultEnum.error;
-        console.log(request.body.login);
-        console.log(request.body.password);
         userRepository.find({ where: { login: request.body.login } }).then(async (users:User[])=>{
-            console.log(users);
             if (users.length!=1) {
                 throw new UserNotFoundException('');
             }
 
             let user = users[0];
             let value = await comparePassword(request.body.password,user.password);
-            console.log(value);
             if (!value) {
                 throw new UserNotFoundException('');
             }
@@ -119,7 +126,6 @@ export class AutorizationController extends Controller{
         result.user = null;
         result.errors = [];
         result.result = ResponseResultEnum.error;
-        console.log(request.state);
         if (request.state instanceof AutorizedState) {
             const state:AutorizedState = request.state;
             result.user = {
@@ -141,7 +147,6 @@ export class AutorizationController extends Controller{
         result.user = null;
         result.errors = [];
         result.result = ResponseResultEnum.error;
-        console.log(request.state);
         if (request.state instanceof AutorizedState) {
             const state:AutorizedState = request.state;
             const sessionRepository = getRepository(UserSession);
