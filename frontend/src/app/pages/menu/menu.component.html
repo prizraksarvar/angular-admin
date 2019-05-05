@@ -1,0 +1,14 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th *ngFor="let field of fields" scope="col">{{field.title}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of menu">
+        <td *ngFor="let field of fields">
+            <app-core-field-viewer [field]="field" [value]="item[field.name]" [viewType]="field.listView"></app-core-field-viewer>
+        </td>
+    </tr>
+    </tbody>
+</table>

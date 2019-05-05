@@ -5,16 +5,16 @@ import {FormsModule} from '@angular/forms';
 import { HttpClientModule }    from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {AutorizationComponent} from './autorization/autorization.component';
-import {DashboardComponent} from './dashboard/dashboard.component';
-import { MenuComponent } from './menu/menu.component';
-import { MenuAdminComponent } from './admin_components/menu/menu.component';
+import {AutorizationComponent} from './pages/autorization/autorization.component';
+import {DashboardComponent} from './pages/dashboard/dashboard.component';
+import { MenuComponent } from './components/menu/menu.component';
+import { MenuAdminComponent } from './pages/menu/menu.component';
 import { CookieService } from 'ngx-cookie-service';
-import { MessagelogComponent } from './messagelog/messagelog.component';
-import {CoreInputViewComponent} from "./admin_components/core/field-views/core-input-view.component";
-import {CoreFieldViewerComponent} from "./admin_components/core/core-field-viewer.component";
-import {CoreTextViewComponent} from "./admin_components/core/field-views/core-text-view.component";
-import {CoreFieldViewerDirective} from "./admin_components/core/core-field-viewer.directive";
+import { MessagelogComponent } from './core/messagelog/messagelog.component';
+import {CoreInputViewComponent} from "./admin/core/field/views/core-input-view.component";
+import {CoreFieldViewerComponent} from "./admin/core/field/core-field-viewer.component";
+import {CoreTextViewComponent} from "./admin/core/field/views/core-text-view.component";
+import {CoreFieldViewerDirective} from "./admin/core/field/core-field-viewer.directive";
 
 @NgModule({
     declarations: [

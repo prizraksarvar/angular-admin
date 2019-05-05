@@ -1,7 +1,7 @@
-import {Application} from "../Application";
-import {IMiddlewareHandler} from "../http/IMiddlewareHandler";
-import {MiddlewareHandlerAdapter} from "../http/MiddlewareHandlerAdapter";
-import {RouteMiddlewareTypes} from "./RouteMiddlewareTypes";
+import {Application} from "../application";
+import {MiddlewareHandler} from "../http/middleware-handler";
+import {MiddlewareHandlerAdapter} from "../http/middleware-handler-adapter";
+import {RouteMiddlewareTypes} from "./route-middleware-types";
 
 
 export abstract class Controller {
@@ -26,8 +26,8 @@ export abstract class Controller {
      */
     abstract initMiddleware():void;
 
-    protected registerMiddleware(handler:IMiddlewareHandler):void;
-    protected registerMiddleware(path:string,handler:IMiddlewareHandler): void;
+    protected registerMiddleware(handler:MiddlewareHandler):void;
+    protected registerMiddleware(path:string,handler:MiddlewareHandler): void;
     protected registerMiddleware(path:any,handler?:any) {
         if (typeof path === "string") {
             this.app.getServer().use(path,MiddlewareHandlerAdapter.handler(handler));
@@ -36,8 +36,8 @@ export abstract class Controller {
         }
     }
 
-    protected registerRouteMiddleware(type:RouteMiddlewareTypes, handler:IMiddlewareHandler):void;
-    protected registerRouteMiddleware(type:RouteMiddlewareTypes, path:string,handler:IMiddlewareHandler): void;
+    protected registerRouteMiddleware(type:RouteMiddlewareTypes, handler:MiddlewareHandler):void;
+    protected registerRouteMiddleware(type:RouteMiddlewareTypes, path:string,handler:MiddlewareHandler): void;
     protected registerRouteMiddleware(type:RouteMiddlewareTypes, path:any,handler?:any) {
         if (typeof path === "string") {
             // @ts-ignore

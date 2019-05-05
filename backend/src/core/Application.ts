@@ -3,11 +3,11 @@ import {Express, IRouterHandler, json, NextFunction, Request, Response} from "ex
 import {rejects} from "assert";
 import database from "./database";
 import serverStarter from "./server";
-import {Controller} from "./component/Controller";
-import {IRequest} from "./http/IRequest";
-import {IResponse} from "./http/IResponse";
-import {DefaultRequestState} from "./http/DefaultRequestState";
-import {MiddlewareHandlerAdapter} from "./http/MiddlewareHandlerAdapter";
+import {Controller} from "./component/controller";
+import {RequestInterface} from "./http/request-interface";
+import {ResponseInterface} from "./http/response-interface";
+import {DefaultRequestState} from "./http/default-request.state";
+import {MiddlewareHandlerAdapter} from "./http/middleware-handler-adapter";
 
 
 export class Application {
@@ -31,7 +31,7 @@ export class Application {
         });
     }
 
-    protected static prepareRequest(request:IRequest, response:IResponse, next:NextFunction) {
+    protected static prepareRequest(request:RequestInterface, response:ResponseInterface, next:NextFunction) {
         request.state = new DefaultRequestState();
         next();
     }

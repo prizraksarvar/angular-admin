@@ -2,13 +2,13 @@
    "type": "mysql",
    "host": "localhost",
    "port": 3306,
-   "username": "",
-   "password": "",
-   "database": "",
+   "username": "admin",
+   "password": "Drt!fa12g",
+   "database": "angular_admin_test",
    "synchronize": true,
    "logging": true,
    "entities": [
-      "lib/entity/**/*.js"
+      "lib/entities/**/*.js"
    ],
    "migrations": [
       "lib/migration/**/*.js"
@@ -17,7 +17,7 @@
       "lib/subscriber/**/*.js"
    ],
    "cli": {
-      "entitiesDir": "lib/entity",
+      "entitiesDir": "lib/entities",
       "migrationsDir": "lib/migration",
       "subscribersDir": "lib/subscriber"
    }

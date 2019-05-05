@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AutorizationService} from "./autorization/autorization.service";
+import {AutorizationService} from "./core/autorization.service";
 import {Subscription} from "rxjs";
-import {User} from "./entities/User";
+import {User} from "./entities/user";
 
 @Component({
     selector: 'app-root',
