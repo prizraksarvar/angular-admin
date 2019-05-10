@@ -1,5 +1,5 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AutorizationService} from "./core/autorization.service";
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {AutorizationService} from "./services/autorization.service";
 import {Subscription} from "rxjs";
 import {User} from "./entities/user";
 
@@ -14,10 +14,10 @@ export class AppComponent implements OnInit, OnDestroy {
     subscriptions:Subscription[];
     autorizationService: AutorizationService;
 
-    constructor(autorizationService: AutorizationService) {
+    constructor(@Inject('AutorizationService') autorizationService: AutorizationService) {
         this.autorizationService = autorizationService;
         this.subscriptions = [];
-        let state = autorizationService.getState();
+        let state = autorizationService.getAutorizationState();
         this.user = null;
         this.subscriptions.push(state.user$.subscribe((value:User)=>{this.user = value}));
     }

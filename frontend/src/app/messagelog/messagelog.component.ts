@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {MessagelogService} from "./messagelog.service";
+import {MessagelogService} from "../services/messagelog.service";
 
 @Component({
   selector: 'app-messagelog',

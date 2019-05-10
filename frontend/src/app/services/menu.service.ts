@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from "rxjs";
 import {catchError, tap} from "rxjs/operators";
-import {MessagelogService, MessagelogStatus} from "../core/messagelog/messagelog.service";
-import {HttpResultEnum} from "../core/http.result";
+import {MessagelogService, MessagelogStatus} from "./messagelog.service";
+import {HttpResultEnum} from "../entities/http.result";
 import {CookieService} from 'ngx-cookie-service';
 import {AppWebservice} from "../app.webservice";
-import {AutorizationState} from "../pages/autorization/autorization.state";
-import {AutorizationForm} from "../pages/autorization/autorization-form";
-import {AutorizationResult} from "../pages/autorization/autorization.result";
+import {AutorizationState} from "../autorization/autorization.state";
+import {AutorizationForm} from "../autorization/autorization-form";
+import {AutorizationResult} from "../autorization/autorization.result";
 
 @Injectable({
     providedIn: 'root'

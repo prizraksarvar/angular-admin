@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router, NavigationStart} from '@angular/router';
 import {filter} from 'rxjs/operators';
-import {Menu} from "../../entities/menu";
+import {Menu} from "../entities/menu";
 import {Observable} from "rxjs";
 
 @Component({

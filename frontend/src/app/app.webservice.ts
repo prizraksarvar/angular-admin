@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpClientModule, HttpHeaders} from '@angular/common/http';
-import {MessagelogService, MessagelogStatus} from "./core/messagelog/messagelog.service";
-import {AutorizationResult} from "./pages/autorization/autorization.result";
+import {MessagelogService, MessagelogStatus} from "./services/messagelog.service";
+import {AutorizationResult} from "./autorization/autorization.result";
 import {catchError, tap} from "rxjs/operators";
 import {CookieService} from "ngx-cookie-service";
 import {Observable, of} from "rxjs";

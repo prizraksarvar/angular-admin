@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {User} from "../../entities/user";
-import {AutorizationService} from "../../core/autorization.service";
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {User} from "../entities/user";
+import {AutorizationService} from "../services/autorization.service";
 import {forEach} from "@angular/router/src/utils/collection";
 import {Subscription} from "rxjs";
 import {AutorizationForm} from "./autorization-form";
@@ -18,11 +18,11 @@ export class AutorizationComponent implements OnInit, OnDestroy {
     form: AutorizationForm;
     autorizationService: AutorizationService;
 
-    constructor(autorizationService: AutorizationService) {
+    constructor(@Inject('AutorizationService') autorizationService: AutorizationService) {
         this.autorizationService = autorizationService;
         this.form = new AutorizationForm();
         this.subscriptions = [];
-        let state = autorizationService.getState();
+        let state = autorizationService.getAutorizationState();
         this.isLoading = false;
         this.subscriptions.push(state.isLoading$.subscribe((value: boolean) => {
             this.isLoading = value
