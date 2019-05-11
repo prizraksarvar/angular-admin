@@ -7,8 +7,9 @@ import {DataType} from "../utils/data-type";
   styleUrls: ['./column.component.css']
 })
 export class ColumnComponent implements OnInit {
-  @Input() field: String;
+  @Input() field: string;
   @Input() dataType: DataType;
+  @Input() title: string;
 
   constructor() { }
 

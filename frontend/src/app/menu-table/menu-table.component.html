@@ -1,27 +1,6 @@
 
 <srvcorp-table [data]="menu">
-  <srvcorp-column field="Name" dataType="string"></srvcorp-column>
-  <srvcorp-column field="Age" dataType="number"></srvcorp-column>
-  <div>test</div>
+  <srvcorp-column field="id" dataType="number" title="ID"></srvcorp-column>
+  <srvcorp-column field="name" dataType="string" title="Name"></srvcorp-column>
+  <srvcorp-column field="url" dataType="string" title="URL"></srvcorp-column>
 </srvcorp-table>
-
-
-<igx-grid [data]="localData" width="600px" height="400px" style="margin: auto" [allowFiltering]="true">
-  <igx-column field="Name" dataType="string"></igx-column>
-  <igx-column field="Age" dataType="number"></igx-column>
-</igx-grid>
-
-<table class="table">
-    <thead>
-    <tr>
-        <th *ngFor="let field of fields" scope="col">{{field.title}}</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let item of menu">
-        <td *ngFor="let field of fields">
-            <app-core-field-viewer [field]="field" [value]="item[field.name]" [viewType]="field.listView"></app-core-field-viewer>
-        </td>
-    </tr>
-    </tbody>
-</table>

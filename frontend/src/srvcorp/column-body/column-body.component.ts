@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {DataType} from "../utils/data-type";
 
 @Component({
-  selector: 'srvcorp-column-header',
+  selector: 'td[srvcorp-column-header]',
   templateUrl: './column-body.component.html',
   styleUrls: ['./column-body.component.css']
 })

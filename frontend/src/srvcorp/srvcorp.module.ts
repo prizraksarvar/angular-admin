@@ -6,6 +6,10 @@ import {TableBodyDirective} from "./table/table-body.directive";
 import {TableHeaderDirective} from "./table/table-header.directive";
 import {ColumnHeaderComponent} from "./column-header/column-header.component";
 import {ColumnBodyComponent} from "./column-body/column-body.component";
+import {RowComponent} from "./row/row.component";
+import {RowDirective} from "./row/row.directive";
+import {RowHeaderComponent} from "./row-header/row-header.component";
+import {RowHeaderDirective} from "./row-header/row-header.directive";
 
 @NgModule({
   declarations: [
@@ -13,8 +17,12 @@ import {ColumnBodyComponent} from "./column-body/column-body.component";
     ColumnComponent,
     ColumnHeaderComponent,
     ColumnBodyComponent,
+    RowComponent,
+    RowHeaderComponent,
     TableBodyDirective,
-    TableHeaderDirective
+    TableHeaderDirective,
+    RowDirective,
+    RowHeaderDirective
   ],
   exports: [
     TableComponent,
@@ -22,7 +30,9 @@ import {ColumnBodyComponent} from "./column-body/column-body.component";
   ],
   entryComponents: [
     ColumnHeaderComponent,
-    ColumnBodyComponent
+    ColumnBodyComponent,
+    RowComponent,
+    RowHeaderComponent
   ],
   imports: [
     CommonModule

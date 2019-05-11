@@ -13,6 +13,8 @@ import {TableBodyDirective} from "./table-body.directive";
 import {ColumnComponent} from "../column/column.component";
 import {ColumnHeaderComponent} from "../column-header/column-header.component";
 import {ColumnBodyComponent} from "../column-body/column-body.component";
+import {RowComponent} from "../row/row.component";
+import {RowHeaderComponent} from "../row-header/row-header.component";
 
 @Component({
   selector: 'srvcorp-table',
@@ -39,19 +41,19 @@ export class TableComponent implements OnInit, AfterContentInit {
   private loadComponent() {
     let headerColumnFactory = this.componentFactoryResolver.resolveComponentFactory(ColumnHeaderComponent);
     let bodyColumnFactory = this.componentFactoryResolver.resolveComponentFactory(ColumnBodyComponent);
+    let rowFactory = this.componentFactoryResolver.resolveComponentFactory(RowComponent);
+    let rowHeaderFactory = this.componentFactoryResolver.resolveComponentFactory(RowHeaderComponent);
 
     let headerRef = this.headerHost.elementRef;
     let bodyRef = this.bodyHost.elementRef;
-    //headerRef.clear();
-    //bodyRef.clear();
-    console.log(headerRef);
-    console.log(bodyRef);
-    this.columns.forEach((item,index,array)=>{
-      let headerColumn = headerRef.createComponent(headerColumnFactory);
-      headerColumn.instance.value = item.field;
+    headerRef.clear();
+    bodyRef.clear();
+    let rowHeader = bodyRef.createComponent(rowHeaderFactory);
+    rowHeader.instance.columns = this.columns;
+    this.data.forEach((dataItem, i, ar) => {
+      let row = bodyRef.createComponent(rowFactory);
+      row.instance.dataItem = dataItem;
+      row.instance.columns = this.columns;
     });
-    /*let componentRef = viewContainerRef.createComponent(componentFactory);
-    (<CoreFieldView>componentRef.instance).field = this.field;
-    (<CoreFieldView>componentRef.instance).value = this.value;*/
   }
 }
