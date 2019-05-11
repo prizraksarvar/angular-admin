@@ -15,10 +15,10 @@ import { CoreInputViewComponent } from "./core-field/views/core-input-view.compo
 import { CoreFieldViewerComponent } from "./core-field/core-field-viewer.component";
 import { CoreTextViewComponent } from "./core-field/views/core-text-view.component";
 import { CoreFieldViewerDirective } from "./core-field/core-field-viewer.directive";
-import { WebService } from "./services/web.service";
 import { MockService } from "./services/mock.service";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule } from 'igniteui-angular';
+import {SrvcorpModule} from "../srvcorp/srvcorp.module";
 
 @NgModule({
   declarations: [
@@ -40,7 +40,8 @@ import { IgxGridModule } from 'igniteui-angular';
     HttpClientModule,
     FormsModule,
     BrowserAnimationsModule,
-    IgxGridModule
+    IgxGridModule,
+    SrvcorpModule
   ],
   providers: [
     CookieService,

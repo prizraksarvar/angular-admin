@@ -139,6 +139,134 @@
           }
         }
       }
+    },
+    "srvcorp": {
+      "root": "projects/srvcorp/",
+      "sourceRoot": "projects/srvcorp/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/srvcorp",
+            "index": "projects/srvcorp/src/index.html",
+            "main": "projects/srvcorp/src/main.ts",
+            "polyfills": "projects/srvcorp/src/polyfills.ts",
+            "tsConfig": "projects/srvcorp/tsconfig.app.json",
+            "assets": [
+              "projects/srvcorp/src/favicon.ico",
+              "projects/srvcorp/src/assets"
+            ],
+            "styles": [
+              "projects/srvcorp/src/styles.css"
+            ],
+            "scripts": [],
+            "es5BrowserSupport": true
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/srvcorp/src/environments/environment.ts",
+                  "with": "projects/srvcorp/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "srvcorp:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "srvcorp:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "srvcorp:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/srvcorp/src/test.ts",
+            "polyfills": "projects/srvcorp/src/polyfills.ts",
+            "tsConfig": "projects/srvcorp/tsconfig.spec.json",
+            "karmaConfig": "projects/srvcorp/karma.conf.js",
+            "styles": [
+              "projects/srvcorp/src/styles.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "projects/srvcorp/src/favicon.ico",
+              "projects/srvcorp/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/srvcorp/tsconfig.app.json",
+              "projects/srvcorp/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "srvcorp-e2e": {
+      "root": "projects/srvcorp-e2e/",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/srvcorp-e2e/protractor.conf.js",
+            "devServerTarget": "srvcorp:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "srvcorp:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "projects/srvcorp-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "angular-admin"
