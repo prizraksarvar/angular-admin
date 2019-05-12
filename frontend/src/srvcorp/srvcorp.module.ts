@@ -10,6 +10,11 @@ import {RowComponent} from "./row/row.component";
 import {RowDirective} from "./row/row.directive";
 import {RowHeaderComponent} from "./row-header/row-header.component";
 import {RowHeaderDirective} from "./row-header/row-header.directive";
+import {HeaderComponent} from "./header/header.component";
+import {CellComponent} from "./cell/cell.component";
+import {HeaderDirective} from "./column/header.directive";
+import {CellDirective} from "./column/cell.directive";
+import {ColumnHeaderDirective} from "./column-header/column-header.directive";
 
 @NgModule({
   declarations: [
@@ -22,11 +27,20 @@ import {RowHeaderDirective} from "./row-header/row-header.directive";
     TableBodyDirective,
     TableHeaderDirective,
     RowDirective,
-    RowHeaderDirective
+    RowHeaderDirective,
+    HeaderComponent,
+    CellComponent,
+    HeaderDirective,
+    CellDirective,
+    ColumnHeaderDirective
   ],
   exports: [
     TableComponent,
-    ColumnComponent
+    ColumnComponent,
+    HeaderComponent,
+    CellComponent,
+    HeaderDirective,
+    CellDirective
   ],
   entryComponents: [
     ColumnHeaderComponent,

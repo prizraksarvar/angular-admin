@@ -2,11 +2,11 @@ import {Component, ContentChild, ContentChildren, Input, OnInit, QueryList} from
 import {DataType} from "../utils/data-type";
 
 @Component({
-  selector: 'srvcorp-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  selector: 'srvcorp-cell',
+  templateUrl: './cell.component.html',
+  styleUrls: ['./cell.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class CellComponent implements OnInit {
 
   constructor() { }
 

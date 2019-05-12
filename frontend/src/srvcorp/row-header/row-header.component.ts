@@ -26,9 +26,12 @@ export class RowHeaderComponent implements OnInit {
 
     let rowRef = this.rowHost.elementRef;
     rowRef.clear();
-    this.columns.forEach((item,index,array)=>{
+    this.columns.forEach((column,index,array)=>{
       let headerColumn = rowRef.createComponent(headerColumnFactory);
-      headerColumn.instance.value = item.title;
+      headerColumn.instance.value = column.title;
+      if (column.header) {
+        headerColumn.instance.customContent = column.header.elementRef;
+      }
     });
   }
 }
