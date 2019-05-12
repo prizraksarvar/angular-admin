@@ -3,15 +3,14 @@ import {DataType} from "../utils/data-type";
 
 @Component({
   selector: 'srvcorp-column',
-  templateUrl: './column.component.html',
-  styleUrls: ['./column.component.css']
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css']
 })
-export class ColumnComponent implements OnInit {
+export class HeaderComponent implements OnInit {
   @Input() field: string;
   @Input() dataType: DataType;
   @Input() title: string;
-  @ContentChild(ColumnComponent) header: ColumnComponent;
-  @ContentChild(ColumnComponent) column: ColumnComponent;
+  @ContentChild(HeaderComponent) header: HeaderComponent;
 
   constructor() { }
 
