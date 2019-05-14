@@ -1,0 +1,11 @@
+<div>
+    <app-test-menu></app-test-menu>
+    <div [@toggleListItemShow]="{value: viewTypeSwitch ? 'card' : 'list', params: {itemTop: itemTop, pageTop: pageYOffset, pageHeight: pageHeight}}"
+         style="height: 100%"
+         (@toggleListItemShow.start)="animStart($event)"
+         (@toggleListItemShow.done)="animDone($event)">
+        <app-test-list *ngIf="!viewTypeSwitch" [listener]="listItemClick"></app-test-list>
+        <app-test-card *ngIf="viewTypeSwitch" [item]="item" [top]="itemTop" [listener]="cardCloseClick"
+                       [style.top]="itemTop+'px'"></app-test-card>
+    </div>
+</div>

@@ -15,27 +15,33 @@ import {ColumnHeaderComponent} from "../column-header/column-header.component";
 import {ColumnBodyComponent} from "../column-body/column-body.component";
 import {RowComponent} from "../row/row.component";
 import {RowHeaderComponent} from "../row-header/row-header.component";
+import {rowHoverAnimation} from "../animations/row-hover.animation";
 
 @Component({
   selector: 'srvcorp-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
+  styleUrls: ['./table.component.css'],
+  animations: [rowHoverAnimation]
 })
 export class TableComponent implements OnInit, AfterContentInit {
   @Input() data:any[];
   @ViewChild(TableHeaderDirective) headerHost: TableHeaderDirective;
   @ViewChild(TableBodyDirective) bodyHost: TableBodyDirective;
   @ContentChildren(ColumnComponent) columns: QueryList<ColumnComponent>;
+  rows: any[];
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
-
+      this.rows = [];
+      this.data.forEach((dataItem, i, ar) => {
+          this.rows.push({hover: false});//TODO: need move to class
+      });
   }
 
   ngAfterContentInit(): void {
     console.log(this.columns);
-    this.loadComponent();
+    //this.loadComponent();
   }
 
   private loadComponent() {
@@ -48,7 +54,7 @@ export class TableComponent implements OnInit, AfterContentInit {
     let bodyRef = this.bodyHost.elementRef;
     headerRef.clear();
     bodyRef.clear();
-    let rowHeader = bodyRef.createComponent(rowHeaderFactory);
+    let rowHeader = headerRef.createComponent(rowHeaderFactory);
     rowHeader.instance.columns = this.columns;
     this.data.forEach((dataItem, i, ar) => {
       let row = bodyRef.createComponent(rowFactory);

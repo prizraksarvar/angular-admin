@@ -42,5 +42,13 @@ export class MenuComponent implements OnInit {
         item.icon='';
         item.isActive=false;
         this.menu.push(item);
+
+        item = new Menu();
+        item.id=1;
+        item.name='Animtest';
+        item.url='/animtest';
+        item.icon='';
+        item.isActive=false;
+        this.menu.push(item);
     }
 }

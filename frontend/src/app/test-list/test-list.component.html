@@ -1,0 +1,18 @@
+<table class="table">
+    <tbody>
+    <tr *ngFor="let item of items"
+        (click)="itemClick($event,item)"
+        [@hoverToggle]="item.isHover ? 'hover' : 'notHover'"
+        (mouseenter)="hoverToggle(item)"
+        (mouseleave)="hoverToggle(item)">
+        <td style="width: 30px;">{{item.id}}</td>
+        <td style="width: 40px;">
+            <div style="background-position: center;background-size: cover; border-radius: 50%; width: 40px; height: 40px;"
+                [style.background-image]="'url(assets/'+item.image+')'"></div>
+        </td>
+        <td>{{item.name}}</td>
+        <td>{{item.cat}}</td>
+        <td>{{item.add}}</td>
+    </tr>
+    </tbody>
+</table>

@@ -5,6 +5,7 @@ import {RowDirective} from "./row.directive";
 import {ColumnComponent} from "../column/column.component";
 import {ColumnHeaderComponent} from "../column-header/column-header.component";
 import {ColumnBodyComponent} from "../column-body/column-body.component";
+import {rowHoverAnimation} from "../animations/row-hover.animation";
 
 @Component({
   selector: 'tr[srvcorp-row]',

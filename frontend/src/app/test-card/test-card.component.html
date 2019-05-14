@@ -1,0 +1,12 @@
+<div app-test-card-host>
+    <div class="test-card-animate-logo"
+         style="background-position: center;background-size: cover; border-radius: 50%; width: 150px; height: 150px;"
+         [style.background-image]="'url(assets/'+item.image+')'"></div>
+    <h1 class="test-card-animate-name">{{item.name}}</h1>
+    <div class="test-card-animate-hidden">
+        <button (click)="closeClick()">Close</button>
+        <p>
+            {{item.cat}}
+        </p>
+    </div>
+</div>

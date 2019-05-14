@@ -1,6 +1,14 @@
 <table class="table">
   <thead srvcorp-table-header-host>
+    <tr srvcorp-row-header [columns]="columns"></tr>
   </thead>
   <tbody srvcorp-table-body-host>
+    <tr srvcorp-row
+        *ngFor="let dataItem of data; let i = index"
+        [dataItem]="dataItem"
+        [columns]="columns"
+        [@hoverToggle]="rows[i].hover ? 'hover' : 'notHover'"
+        (mouseenter)="rows[i].hover=true"
+        (mouseleave)="rows[i].hover=false"></tr>
   </tbody>
 </table>

@@ -17,8 +17,12 @@ import { CoreTextViewComponent } from "./core-field/views/core-text-view.compone
 import { CoreFieldViewerDirective } from "./core-field/core-field-viewer.directive";
 import { MockService } from "./services/mock.service";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule } from 'igniteui-angular';
 import {SrvcorpModule} from "../srvcorp/srvcorp.module";
+import {TestCardDirective} from "./test-card/test-card.directive";
+import {TestListComponent} from "./test-list/test-list.component";
+import {TestCardComponent} from "./test-card/test-card.component";
+import {AnimtestComponent} from "./animtest/animtest.component";
+import {TestMenuComponent} from "./test-menu/test-menu.component";
 
 @NgModule({
   declarations: [
@@ -31,7 +35,12 @@ import {SrvcorpModule} from "../srvcorp/srvcorp.module";
     CoreInputViewComponent,
     CoreFieldViewerComponent,
     CoreFieldViewerDirective,
-    CoreTextViewComponent
+    CoreTextViewComponent,
+    TestCardDirective,
+    TestCardComponent,
+    TestListComponent,
+    TestMenuComponent,
+    AnimtestComponent
   ],
   entryComponents: [CoreInputViewComponent, CoreTextViewComponent],
   imports: [
@@ -40,7 +49,6 @@ import {SrvcorpModule} from "../srvcorp/srvcorp.module";
     HttpClientModule,
     FormsModule,
     BrowserAnimationsModule,
-    IgxGridModule,
     SrvcorpModule
   ],
   providers: [
