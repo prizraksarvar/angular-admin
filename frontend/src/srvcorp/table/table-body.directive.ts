@@ -1,7 +1,7 @@
 import {Directive, ElementRef, ViewContainerRef} from "@angular/core";
 
 @Directive({
-    selector: '[srvcorp-table-body-host]',
+    selector: '[srvcorpTableBodyHost]',
 })
 export class TableBodyDirective {
     constructor(public elementRef: ViewContainerRef) { }

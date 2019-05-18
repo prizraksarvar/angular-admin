@@ -4,7 +4,7 @@ import {TableHeaderDirective} from "../table/table-header.directive";
 import {ColumnHeaderDirective} from "./column-header.directive";
 
 @Component({
-  selector: 'th[srvcorp-column-header]',
+  selector: '[srvcorpColumnHeader]',
   templateUrl: './column-header.component.html',
   styleUrls: ['./column-header.component.css']
 })

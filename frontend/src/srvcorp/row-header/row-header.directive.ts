@@ -1,7 +1,7 @@
 import {Directive, ElementRef, ViewContainerRef} from "@angular/core";
 
 @Directive({
-    selector: '[srvcorp-row-header-host]',
+    selector: '[srvcorpRowHeaderHost]',
 })
 export class RowHeaderDirective {
     constructor(public elementRef: ViewContainerRef) { }

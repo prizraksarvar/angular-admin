@@ -2,12 +2,12 @@ import {
   AfterContentInit,
   Component,
   ComponentFactoryResolver,
-  ContentChildren,
+  ContentChildren, HostListener,
   Input,
-  OnInit, QueryList,
+  OnInit,
+  QueryList,
   ViewChild
 } from '@angular/core';
-import {Menu} from "../../app/entities/menu";
 import {TableHeaderDirective} from "./table-header.directive";
 import {TableBodyDirective} from "./table-body.directive";
 import {ColumnComponent} from "../column/column.component";
@@ -15,28 +15,33 @@ import {ColumnHeaderComponent} from "../column-header/column-header.component";
 import {ColumnBodyComponent} from "../column-body/column-body.component";
 import {RowComponent} from "../row/row.component";
 import {RowHeaderComponent} from "../row-header/row-header.component";
-import {rowHoverAnimation} from "../animations/row-hover.animation";
+import {rowBacklightAnimation} from "../animations/row-backlight.animation";
+import {RowState} from "../entities/row-state";
+import {MouseButtonState, MouseState} from "../entities/mouse-state";
 
 @Component({
   selector: 'srvcorp-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
-  animations: [rowHoverAnimation]
+  animations: [rowBacklightAnimation]
 })
 export class TableComponent implements OnInit, AfterContentInit {
-  @Input() data:any[];
+  @Input() data: any[];
   @ViewChild(TableHeaderDirective) headerHost: TableHeaderDirective;
   @ViewChild(TableBodyDirective) bodyHost: TableBodyDirective;
   @ContentChildren(ColumnComponent) columns: QueryList<ColumnComponent>;
-  rows: any[];
+  rowsStates: RowState[];
+  mouseState: MouseState = new MouseState();
+  rowSelectState:boolean = false;
+  rowSelectStartIndex:number = -1;
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
+  constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
 
   ngOnInit() {
-      this.rows = [];
-      this.data.forEach((dataItem, i, ar) => {
-          this.rows.push({hover: false});//TODO: need move to class
-      });
+    this.rowsStates = [];
+    this.data.forEach((dataItem, i, ar) => {
+      this.rowsStates.push(new RowState());
+    });
   }
 
   ngAfterContentInit(): void {
@@ -44,6 +49,95 @@ export class TableComponent implements OnInit, AfterContentInit {
     //this.loadComponent();
   }
 
+  getRowStateName(index:number):string {
+    let row = this.rowsStates[index];
+    if (row.checked) {
+      return 'checked';
+    } else if (row.selected) {
+      return 'selected';
+    } else if (row.hover) {
+      return 'hover';
+    }
+    return 'clear';
+  }
+
+  rowMouseEnter(event, index:number) {
+    this.mouseStateUpdate(event);
+    this.rowsStates[index].hover=true;
+    if (this.getMouseFirstButtonState(event)) {
+      if ( index!=this.rowSelectStartIndex) {
+        let i = 0;
+        if (this.rowSelectStartIndex > index) {
+          i = 1;
+        } else if (this.rowSelectStartIndex < index) {
+          i = -1;
+        }
+        this.rowsStates[index+i].checked = this.rowSelectState;
+      }
+      this.rowsStates[index].checked = this.rowSelectState;
+    }
+  }
+
+  rowMouseLeave(event, index:number) {
+    this.mouseStateUpdate(event);
+    this.rowsStates[index].hover=false;
+    if (this.getMouseFirstButtonState(event) && index!=this.rowSelectStartIndex) {
+      this.rowsStates[index].checked = !this.rowSelectState;
+    }
+  }
+
+  rowMouseDown(event, index:number) {
+    this.mouseStateUpdate(event);
+    this.rowSelectStartIndex = index;
+    if (this.getMouseFirstButtonState(event)) {
+      this.rowSelectState = !this.rowsStates[index].checked;
+      this.rowsStates[index].checked = this.rowSelectState;
+    }
+  }
+
+  rowMouseUp(event, index:number) {
+    this.mouseStateUpdate(event);
+    this.mouseState.firstButton = MouseButtonState.free;
+  }
+
+  @HostListener('window:mouseup', ['$event'])
+  mouseUp(event){
+    this.mouseState.firstButton = MouseButtonState.free;
+  }
+
+  private mouseStateUpdate(event) {
+    if (this.getMouseFirstButtonState(event)) {
+      this.mouseState.firstButton = MouseButtonState.pressed;
+    } else {
+      this.mouseState.firstButton = MouseButtonState.free;
+    }
+    if (this.getMouseSecondButtonState(event)) {
+      this.mouseState.secondButton = MouseButtonState.pressed;
+    } else {
+      this.mouseState.secondButton = MouseButtonState.free;
+    }
+    if (this.getMouseThirdButtonState(event)) {
+      this.mouseState.thirdButton = MouseButtonState.pressed;
+    } else {
+      this.mouseState.thirdButton = MouseButtonState.free;
+    }
+  }
+
+  private getMouseFirstButtonState(event) {
+    return (event.buttons & 1) == 1;
+  }
+
+  private getMouseSecondButtonState(event) {
+    return (event.buttons & 1) == 1;
+  }
+
+  private getMouseThirdButtonState(event) {
+    return (event.buttons & 1) == 1;
+  }
+
+  /**
+   * @deprecated
+   */
   private loadComponent() {
     let headerColumnFactory = this.componentFactoryResolver.resolveComponentFactory(ColumnHeaderComponent);
     let bodyColumnFactory = this.componentFactoryResolver.resolveComponentFactory(ColumnBodyComponent);

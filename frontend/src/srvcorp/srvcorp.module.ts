@@ -15,6 +15,7 @@ import {CellComponent} from "./cell/cell.component";
 import {HeaderDirective} from "./column/header.directive";
 import {CellDirective} from "./column/cell.directive";
 import {ColumnHeaderDirective} from "./column-header/column-header.directive";
+import {ColumnBodyDirective} from "./column-body/column-body.directive";
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import {ColumnHeaderDirective} from "./column-header/column-header.directive";
     CellComponent,
     HeaderDirective,
     CellDirective,
-    ColumnHeaderDirective
+    ColumnHeaderDirective,
+    ColumnBodyDirective
   ],
   exports: [
     TableComponent,

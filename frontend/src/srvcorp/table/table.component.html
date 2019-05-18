@@ -1,14 +1,27 @@
 <table class="table">
-  <thead srvcorp-table-header-host>
-    <tr srvcorp-row-header [columns]="columns"></tr>
+  <thead srvcorpTableHeaderHost>
+    <tr srvcorpRowHeader [columns]="columns">
+      <th srvcorpColumnHeader
+          *ngFor="let column of columns; let i = index"
+          [value]="column.title"
+          [customContent]="column.header?column.header.elementRef:null"></th>
+    </tr>
   </thead>
-  <tbody srvcorp-table-body-host>
-    <tr srvcorp-row
+  <tbody srvcorpTableBodyHost>
+    <tr srvcorpRow
         *ngFor="let dataItem of data; let i = index"
         [dataItem]="dataItem"
         [columns]="columns"
-        [@hoverToggle]="rows[i].hover ? 'hover' : 'notHover'"
-        (mouseenter)="rows[i].hover=true"
-        (mouseleave)="rows[i].hover=false"></tr>
+        [@backlightToggle]="getRowStateName(i)"
+        (mousedown)="rowMouseDown($event, i)"
+        (mouseup)="rowMouseUp($event, i)"
+        (mouseenter)="rowMouseEnter($event, i)"
+        (mouseleave)="rowMouseLeave($event, i)">
+      <td srvcorpColumnBody
+          *ngFor="let column of columns; let i = index"
+          [value]="dataItem[column.field]"
+          [dataType]="column.dataType"
+          [customContent]="column.cell?column.cell.elementRef:null"></td>
+    </tr>
   </tbody>
 </table>

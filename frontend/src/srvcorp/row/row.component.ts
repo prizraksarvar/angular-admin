@@ -5,10 +5,10 @@ import {RowDirective} from "./row.directive";
 import {ColumnComponent} from "../column/column.component";
 import {ColumnHeaderComponent} from "../column-header/column-header.component";
 import {ColumnBodyComponent} from "../column-body/column-body.component";
-import {rowHoverAnimation} from "../animations/row-hover.animation";
+import {rowBacklightAnimation} from "../animations/row-backlight.animation";
 
 @Component({
-  selector: 'tr[srvcorp-row]',
+  selector: '[srvcorpRow]',
   templateUrl: './row.component.html',
   styleUrls: ['./row.component.css']
 })
@@ -20,9 +20,12 @@ export class RowComponent implements OnInit {
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
-    this.loadComponent();
+    //this.loadComponent();
   }
 
+  /**
+   * @deprecated
+   */
   private loadComponent() {
     let bodyColumnFactory = this.componentFactoryResolver.resolveComponentFactory(ColumnBodyComponent);
 

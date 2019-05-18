@@ -7,7 +7,7 @@ import {ColumnHeaderComponent} from "../column-header/column-header.component";
 import {ColumnBodyComponent} from "../column-body/column-body.component";
 
 @Component({
-  selector: 'tr[srvcorp-row-header]',
+  selector: '[srvcorpRowHeader]',
   templateUrl: './row-header.component.html',
   styleUrls: ['./row-header.component.css']
 })
@@ -18,9 +18,12 @@ export class RowHeaderComponent implements OnInit {
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
-    this.loadComponent();
+    //this.loadComponent();
   }
 
+  /**
+   * @deprecated
+   */
   private loadComponent() {
     let headerColumnFactory = this.componentFactoryResolver.resolveComponentFactory(ColumnHeaderComponent);
 
