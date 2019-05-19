@@ -24,16 +24,13 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/service-worker.js",
               "src/assets"
             ],
             "styles": [
               "src/styles.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
-            "scripts": [
-              "src/assets/install.js"
-            ],
+            "scripts": [],
             "es5BrowserSupport": true
           },
           "configurations": {
