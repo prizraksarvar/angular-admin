@@ -16,6 +16,7 @@ import {HeaderDirective} from "./column/header.directive";
 import {CellDirective} from "./column/cell.directive";
 import {ColumnHeaderDirective} from "./column-header/column-header.directive";
 import {ColumnBodyDirective} from "./column-body/column-body.directive";
+import {CellEditorComponent} from "./cell-editor/cell-editor.component";
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {ColumnBodyDirective} from "./column-body/column-body.directive";
     HeaderDirective,
     CellDirective,
     ColumnHeaderDirective,
-    ColumnBodyDirective
+    ColumnBodyDirective,
+    CellEditorComponent
   ],
   exports: [
     TableComponent,

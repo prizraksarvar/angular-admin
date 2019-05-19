@@ -1,2 +1,3 @@
-<div *ngIf="!customContent">{{value}}</div>
+<div *ngIf="!customContent && !editMode">{{value}}</div>
+<srvcorp-cell-editor *ngIf="!customContent && editMode" [value]="value" [dataType]="dataType"></srvcorp-cell-editor>
 <div srvcorpColumnBodyHost></div>

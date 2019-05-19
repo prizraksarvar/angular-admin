@@ -1,9 +1,10 @@
 
-<srvcorp-table [data]="menu">
-  <srvcorp-column field="id" dataType="number" title="ID"></srvcorp-column>
-  <srvcorp-column field="name" dataType="string" title="Name"></srvcorp-column>
-  <srvcorp-column field="url" dataType="string" title="URL">
+<h1>Menu table</h1>
+<srvcorp-table [data]="menu" [columnCount]="3">
+  <srvcorp-column field="id" [dataType]="number" title="ID"></srvcorp-column>
+  <srvcorp-column field="name" [dataType]="string" title="Name" [editable]="true"></srvcorp-column>
+  <srvcorp-column field="url" [dataType]="string" title="URL" [editable]="true">
     <ng-template srvcorpHeader>URL custom</ng-template>
-    <ng-template srvcorpCell let-val>Cell custom {{val}}</ng-template>
+    <ng-template srvcorpCell let-val="$val">Cell custom {{val}}</ng-template>
   </srvcorp-column>
 </srvcorp-table>

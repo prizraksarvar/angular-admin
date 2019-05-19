@@ -14,6 +14,7 @@ export class ColumnComponent implements OnInit, AfterContentInit {
   @Input() field: string;
   @Input() dataType: DataType;
   @Input() title: string;
+  @Input() editable: boolean = false;
   @ContentChild(HeaderDirective) header: HeaderDirective;
   @ContentChild(CellDirective) cell: CellDirective;
 
@@ -23,7 +24,7 @@ export class ColumnComponent implements OnInit, AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-
+    console.log(this.dataType);
   }
 
 }

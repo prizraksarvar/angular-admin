@@ -11,6 +11,7 @@ import {ColumnBodyDirective} from "./column-body.directive";
 export class ColumnBodyComponent implements OnInit, AfterContentInit {
   @Input() value: String;
   @Input() dataType: DataType;
+  @Input() editMode: boolean = false;
   @Input() customContent: TemplateRef<any>;
   @ViewChild(ColumnBodyDirective) columnBodyHost: ColumnBodyDirective;
 

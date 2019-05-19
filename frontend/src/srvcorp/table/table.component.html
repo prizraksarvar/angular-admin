@@ -12,16 +12,18 @@
         *ngFor="let dataItem of data; let i = index"
         [dataItem]="dataItem"
         [columns]="columns"
-        [@backlightToggle]="getRowStateName(i)"
-        (mousedown)="rowMouseDown($event, i)"
-        (mouseup)="rowMouseUp($event, i)"
-        (mouseenter)="rowMouseEnter($event, i)"
-        (mouseleave)="rowMouseLeave($event, i)">
+        [@rowBacklightToggle]="getRowStateName(i)">
       <td srvcorpColumnBody
-          *ngFor="let column of columns; let i = index"
+          *ngFor="let column of columns; let j = index"
           [value]="dataItem[column.field]"
           [dataType]="column.dataType"
-          [customContent]="column.cell?column.cell.elementRef:null"></td>
+          [editMode]="column.editable && cellsStates[i][j].active"
+          [customContent]="column.cell?column.cell.elementRef:null"
+          [@cellBacklightToggle]="getCellStateName(i,j)"
+          (mousedown)="cellMouseDown($event, i, j)"
+          (mouseup)="cellMouseUp($event, i, j)"
+          (mouseenter)="cellMouseEnter($event, i, j)"
+          (mouseleave)="cellMouseLeave($event, i, j)"></td>
     </tr>
   </tbody>
 </table>
