@@ -1,14 +1,10 @@
 <div [@toggleMenuShow]="isOpen?'opened':'closed'">
-    <button class="m-4" (click)="open()">Показать меню</button>
-    <div class="app-test-menu" *ngIf="isOpen">
-        <div class="app-test-menu__overlay" (click)="close()"></div>
-        <div class="app-test-menu__block">
-            <button class="app-test-menu__close" (click)="close()">Закрыть</button>
-            <ul>
-                <li *ngFor="let item of items">
-                    {{item}}
-                </li>
-            </ul>
-        </div>
+  <button class="m-4" (click)="open()">Показать меню</button>
+  <div class="app-test-menu" *ngIf="isOpen">
+    <div class="app-test-menu__overlay" (click)="close()"></div>
+    <div class="app-test-menu__block">
+      <button class="app-test-menu__close" (click)="close()">Закрыть</button>
+      <app-menu></app-menu>
     </div>
+  </div>
 </div>
