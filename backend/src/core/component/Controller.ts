@@ -2,6 +2,11 @@ import {Application} from "../application";
 import {MiddlewareHandler} from "../http/middleware-handler";
 import {MiddlewareHandlerAdapter} from "../http/middleware-handler-adapter";
 import {RouteMiddlewareTypes} from "./route-middleware-types";
+import {ResponseInterface} from "../http/response-interface";
+import {Response, ResponseResultEnum} from "./response";
+import {RequestInterface} from "../http/request-interface";
+import {AutorizedState} from "../../components/autorization/autorized.state";
+import {NextFunction} from "../http/next.function";
 
 
 export abstract class Controller {
@@ -46,5 +51,25 @@ export abstract class Controller {
             // @ts-ignore
             this.app.getServer()[type](MiddlewareHandlerAdapter.handler(path));
         }
+    }
+
+    protected autorizationWrapper(handler:MiddlewareHandler) {
+        return (request:RequestInterface, response:ResponseInterface, next:NextFunction) => {
+            if (!this.isAutorized(request))
+                return this.sendNotFound(response);
+
+            handler(request,response,next);
+        }
+    }
+
+    protected sendNotFound(response:ResponseInterface) {
+        let result = new Response();
+        result.errors = ["Не найден урл"];
+        result.result = ResponseResultEnum.error;
+        response.send(result);
+    }
+
+    protected isAutorized(request:RequestInterface) {
+        return request.state instanceof AutorizedState;
     }
 }
